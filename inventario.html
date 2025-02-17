@@ -48,4 +48,55 @@
 
     <script src="script.js"></script>
 </body>
+    <!-- Modal para agregar/editar equipos -->
+<div id="modal-equipo" class="modal">
+    <div class="modal-contenido">
+        <span class="cerrar-modal">&times;</span>
+        <h2 id="modal-titulo">Nuevo Equipo</h2>
+        <form id="form-equipo" enctype="multipart/form-data">
+            <input type="hidden" id="equipo-id">
+            
+            <div class="form-group">
+                <label>Tipo de Equipo:</label>
+                <select id="tipo-equipo" required>
+                    <option value="computadora">Computadora</option>
+                    <option value="celular">Celular</option>
+                    <option value="impresora">Impresora</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Marca:</label>
+                <input type="text" id="marca" required>
+            </div>
+
+            <div class="form-group">
+                <label>Modelo:</label>
+                <input type="text" id="modelo" required>
+            </div>
+
+            <div class="form-group">
+                <label>Número de Serie:</label>
+                <input type="text" id="numero-serie" required>
+            </div>
+
+            <div class="form-group">
+                <label>Receptor:</label>
+                <select id="receptor-id"></select>
+            </div>
+
+            <div class="form-group">
+                <label>Fotos del Equipo (Máx. 4):</label>
+                <input type="file" id="fotos" accept="image/*" multiple>
+            </div>
+
+            <div class="form-group">
+                <label>PDF de Aceptación:</label>
+                <input type="file" id="pdf-aceptacion" accept=".pdf">
+            </div>
+
+            <button type="submit" class="btn btn-success">Guardar</button>
+        </form>
+    </div>
+</div>
 </html>
