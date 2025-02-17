@@ -1,4 +1,3 @@
-/* styles.css - Versión 2.0 Optimizada */
 :root {
     --color-primario: #2c3e50;
     --color-secundario: #3498db;
@@ -6,12 +5,10 @@
     --color-peligro: #e74c3c;
     --color-advertencia: #f1c40f;
     --color-fondo: #f8f9fa;
-    --color-borde: #e0e0e0;
     --sombra-suave: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* Reset mejorado */
-*, *::before, *::after {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -22,115 +19,26 @@ body {
     line-height: 1.6;
     background: var(--color-fondo);
     color: var(--color-primario);
-    min-height: 100vh;
 }
 
-/* Contenedor principal */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-/* Login */
 .login-container {
-    background: #fff;
+    background: white;
     padding: 2rem;
     border-radius: 10px;
     box-shadow: var(--sombra-suave);
     width: min(90%, 400px);
-    margin: 2rem auto;
+    margin: 5rem auto;
     animation: aparecer 0.4s ease;
 }
 
-.login-container h1 {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    color: var(--color-primario);
-    font-size: 1.8rem;
-}
-
-/* Formularios */
-input:not([type="file"]),
-select,
-textarea {
-    width: 100%;
-    padding: 0.8rem;
-    margin: 0.5rem 0;
-    border: 2px solid var(--color-borde);
-    border-radius: 6px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
-}
-
-input:focus,
-select:focus {
-    border-color: var(--color-secundario);
-    outline: none;
-}
-
-/* Botones */
-.btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-}
-
-.btn-primary { background: var(--color-secundario); color: white; }
-.btn-success { background: var(--color-exito); color: white; }
-.btn-danger { background: var(--color-peligro); color: white; }
-.btn-warning { background: var(--color-advertencia); color: var(--color-primario); }
-
-.btn:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-}
-
-/* Tabla */
 .inventario-table {
     width: 100%;
     border-collapse: collapse;
     background: white;
     box-shadow: var(--sombra-suave);
-    overflow: hidden;
+    margin: 2rem 0;
 }
 
-.inventario-table th,
-.inventario-table td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid var(--color-borde);
-}
-
-.inventario-table th {
-    background: var(--color-primario);
-    color: white;
-    font-weight: 600;
-}
-
-.inventario-table tr:hover {
-    background: #f8fafb;
-}
-
-/* Acciones */
-.acciones {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.acciones button {
-    min-width: 80px;
-    padding: 0.5rem;
-    font-size: 0.9rem;
-}
-
-/* Modal */
 .modal {
     display: none;
     position: fixed;
@@ -140,7 +48,6 @@ select:focus {
     height: 100%;
     background: rgba(0,0,0,0.5);
     z-index: 1000;
-    backdrop-filter: blur(2px);
 }
 
 .modal-contenido {
@@ -149,60 +56,9 @@ select:focus {
     padding: 2rem;
     width: min(90%, 600px);
     border-radius: 10px;
-    box-shadow: var(--sombra-suave);
-    position: relative;
     animation: aparecer 0.3s ease;
 }
 
-.cerrar-modal {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--color-primario);
-    transition: color 0.3s;
-}
-
-.cerrar-modal:hover {
-    color: var(--color-peligro);
-}
-
-/* Formulario modal */
-#form-equipo {
-    display: grid;
-    gap: 1.5rem;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.form-group label {
-    font-weight: 600;
-    color: var(--color-primario);
-}
-
-input[type="file"] {
-    padding: 0.8rem;
-    border: 2px dashed var(--color-secundario);
-    background: var(--color-fondo);
-    border-radius: 6px;
-}
-
-/* Mensajes */
-.error-message {
-    padding: 1rem;
-    background: #fee;
-    color: var(--color-peligro);
-    border: 1px solid var(--color-peligro);
-    border-radius: 6px;
-    margin: 1rem 0;
-}
-
-/* Animaciones */
 @keyframes aparecer {
     from {
         opacity: 0;
@@ -214,27 +70,31 @@ input[type="file"] {
     }
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .container {
-        padding: 15px;
-    }
-    
-    .inventario-table {
-        font-size: 0.9rem;
-    }
-    
-    .modal-contenido {
-        margin: 10vh auto;
-        padding: 1.5rem;
-    }
-    
-    .acciones {
-        flex-direction: column;
-    }
-    
-    .btn {
-        width: 100%;
-        justify-content: center;
-    }
+.btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
 }
+
+.btn-success {
+    background: var(--color-exito);
+    color: white;
+}
+
+.btn-danger {
+    background: var(--color-peligro);
+    color: white;
+}
+
+.error-message {
+    color: var(--color-peligro);
+    padding: 1rem;
+    margin: 1rem 0;
+    background: #fee;
+    border: 1px solid var(--color-peligro);
+    border-radius: 6px;
+}
+
+/* Estilos restantes del modal y formulario... */
