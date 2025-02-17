@@ -33,3 +33,22 @@ C. Datos del receptor (personal que recibe)
 3. Fecha de recibido el equipo
 4. fotografía del empleado receptor
 5. Adjunto documentación en PDF 
+
+
+/Enigmatool
+│
+├── index.html              (Página de inicio de sesión)
+├── inventario.html         (Página principal del inventario)
+├── styles.css              (Estilos CSS para toda la aplicación)
+├── script.js               (Lógica JavaScript para el frontend)
+│
+├── /php
+│   ├── conexion.php        (Conexión a la base de datos)
+│   ├── auth.php            (Autenticación de usuarios)
+│   ├── equipos.php         (API para gestionar equipos)
+│   ├── receptores.php      (API para gestionar receptores)
+│   └── upload.php          (Manejo de subida de archivos)
+│
+├── /uploads                (Carpeta para almacenar imágenes y PDFs)
+│
+└── README.md               (Documentación del proyecto)
