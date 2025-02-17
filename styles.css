@@ -1,17 +1,28 @@
-/* styles.css - Estilos generales para Enigmatool */
+/* styles.css - Versión 2.0 Optimizada */
+:root {
+    --color-primario: #2c3e50;
+    --color-secundario: #3498db;
+    --color-exito: #27ae60;
+    --color-peligro: #e74c3c;
+    --color-advertencia: #f1c40f;
+    --color-fondo: #f8f9fa;
+    --color-borde: #e0e0e0;
+    --sombra-suave: 0 2px 8px rgba(0,0,0,0.1);
+}
 
-/* Reset básico */
-* {
+/* Reset mejorado */
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
 body {
-    font-family: 'Segoe UI', Arial, sans-serif;
+    font-family: 'Segoe UI', system-ui, sans-serif;
     line-height: 1.6;
-    background-color: #f8f9fa;
-    color: #333;
+    background: var(--color-fondo);
+    color: var(--color-primario);
+    min-height: 100vh;
 }
 
 /* Contenedor principal */
@@ -21,32 +32,32 @@ body {
     padding: 20px;
 }
 
-/* Estilos para el login */
+/* Login */
 .login-container {
     background: #fff;
     padding: 2rem;
     border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    width: 100%;
-    max-width: 400px;
+    box-shadow: var(--sombra-suave);
+    width: min(90%, 400px);
     margin: 2rem auto;
+    animation: aparecer 0.4s ease;
 }
 
 .login-container h1 {
     text-align: center;
-    color: #2c3e50;
     margin-bottom: 1.5rem;
+    color: var(--color-primario);
+    font-size: 1.8rem;
 }
 
-/* Campos de formulario */
-input[type="text"],
-input[type="password"],
-input[type="search"],
-select {
+/* Formularios */
+input:not([type="file"]),
+select,
+textarea {
     width: 100%;
     padding: 0.8rem;
     margin: 0.5rem 0;
-    border: 2px solid #e0e0e0;
+    border: 2px solid var(--color-borde);
     border-radius: 6px;
     font-size: 1rem;
     transition: border-color 0.3s ease;
@@ -54,121 +65,176 @@ select {
 
 input:focus,
 select:focus {
-    border-color: #3498db;
+    border-color: var(--color-secundario);
     outline: none;
 }
 
 /* Botones */
 .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     padding: 0.8rem 1.5rem;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-size: 1rem;
-    transition: opacity 0.3s ease;
+    transition: all 0.3s ease;
 }
 
-.btn-primary {
-    background-color: #3498db;
-    color: white;
-}
-
-.btn-success {
-    background-color: #27ae60;
-    color: white;
-}
-
-.btn-danger {
-    background-color: #e74c3c;
-    color: white;
-}
-
-.btn-warning {
-    background-color: #f1c40f;
-    color: #2c3e50;
-}
+.btn-primary { background: var(--color-secundario); color: white; }
+.btn-success { background: var(--color-exito); color: white; }
+.btn-danger { background: var(--color-peligro); color: white; }
+.btn-warning { background: var(--color-advertencia); color: var(--color-primario); }
 
 .btn:hover {
     opacity: 0.9;
+    transform: translateY(-1px);
 }
 
-/* Tabla de inventario */
+/* Tabla */
 .inventario-table {
     width: 100%;
     border-collapse: collapse;
-    margin: 1.5rem 0;
     background: white;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: var(--sombra-suave);
+    overflow: hidden;
 }
 
 .inventario-table th,
 .inventario-table td {
     padding: 1rem;
     text-align: left;
-    border-bottom: 1px solid #ecf0f1;
+    border-bottom: 1px solid var(--color-borde);
 }
 
 .inventario-table th {
-    background-color: #3498db;
+    background: var(--color-primario);
     color: white;
+    font-weight: 600;
 }
 
 .inventario-table tr:hover {
-    background-color: #f8f9fa;
+    background: #f8fafb;
 }
 
-/* Acciones en tabla */
+/* Acciones */
 .acciones {
     display: flex;
     gap: 0.5rem;
 }
 
-/* Mensajes de error */
-.error-message {
-    color: #e74c3c;
+.acciones button {
+    min-width: 80px;
     padding: 0.5rem;
-    margin: 1rem 0;
-    background: #fadbd8;
-    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+/* Modal */
+.modal {
     display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    backdrop-filter: blur(2px);
 }
 
-/* Header de la aplicación */
-.app-header {
-    background: #2c3e50;
-    color: white;
-    padding: 1rem;
-    margin-bottom: 2rem;
-}
-
-.app-header h1 {
-    font-size: 1.5rem;
-}
-
-/* Barra de búsqueda */
-.search-bar {
-    display: flex;
-    gap: 1rem;
-    margin: 1.5rem 0;
-}
-
-/* Tarjetas de equipo */
-.equipo-card {
+.modal-contenido {
     background: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 1rem;
+    margin: 5vh auto;
+    padding: 2rem;
+    width: min(90%, 600px);
+    border-radius: 10px;
+    box-shadow: var(--sombra-suave);
+    position: relative;
+    animation: aparecer 0.3s ease;
 }
 
-/* Responsive Design */
+.cerrar-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--color-primario);
+    transition: color 0.3s;
+}
+
+.cerrar-modal:hover {
+    color: var(--color-peligro);
+}
+
+/* Formulario modal */
+#form-equipo {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--color-primario);
+}
+
+input[type="file"] {
+    padding: 0.8rem;
+    border: 2px dashed var(--color-secundario);
+    background: var(--color-fondo);
+    border-radius: 6px;
+}
+
+/* Mensajes */
+.error-message {
+    padding: 1rem;
+    background: #fee;
+    color: var(--color-peligro);
+    border: 1px solid var(--color-peligro);
+    border-radius: 6px;
+    margin: 1rem 0;
+}
+
+/* Animaciones */
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-    .inventario-table {
-        display: block;
-        overflow-x: auto;
+    .container {
+        padding: 15px;
     }
     
-    .search-bar {
+    .inventario-table {
+        font-size: 0.9rem;
+    }
+    
+    .modal-contenido {
+        margin: 10vh auto;
+        padding: 1.5rem;
+    }
+    
+    .acciones {
         flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
     }
 }
