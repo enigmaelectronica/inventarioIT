@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enigmatool - Inventario</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilos básicos para la página de inventario */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        #busqueda {
+            width: 300px;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        #agregar-equipo {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #agregar-equipo:hover {
+            background-color: #218838;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+        }
+        .acciones button {
+            padding: 5px 10px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .acciones button.editar {
+            background-color: #ffc107;
+            color: #000;
+        }
+        .acciones button.eliminar {
+            background-color: #dc3545;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Control de Inventario</h1>
+    <input type="text" id="busqueda" placeholder="Buscar equipo...">
+    <button id="agregar-equipo">Agregar Equipo</button>
+
+    <table id="tabla-equipos">
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Número de Serie</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Filas dinámicas con JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // Datos de ejemplo (simulando una respuesta del servidor)
+        const equipos = [
+            { tipo: "Computadora", marca: "Dell", modelo: "XPS 13", numero_serie: "ABC123" },
+            { tipo: "Celular", marca: "Samsung", modelo: "Galaxy S21", numero_serie: "XYZ456" },
+            { tipo: "Impresora", marca: "HP", modelo: "LaserJet Pro", numero_serie: "DEF789" }
+        ];
+
+        // Función para renderizar la tabla
+        function renderizarTabla(data) {
+            const tbody = document.querySelector("#tabla-equipos tbody");
+            tbody.innerHTML = ""; // Limpiar la tabla
+
+            data.forEach(equipo => {
+                const fila = document.createElement("tr");
+                fila.innerHTML = `
+                    <td>${equipo.tipo}</td>
+                    <td>${equipo.marca}</td>
+                    <td>${equipo.modelo}</td>
+                    <td>${equipo.numero_serie}</td>
+                    <td class="acciones">
+                        <button class="editar">Editar</button>
+                        <button class="eliminar">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(fila);
+            });
+        }
+
+        // Renderizar la tabla con los datos iniciales
+        renderizarTabla(equipos);
+
+        // Función para buscar equipos
+        document.getElementById("busqueda").addEventListener("input", function (e) {
+            const termino = e.target.value.toLowerCase();
+            const resultados = equipos.filter(equipo =>
+                equipo.tipo.toLowerCase().includes(termino) ||
+                equipo.marca.toLowerCase().includes(termino) ||
+                equipo.modelo.toLowerCase().includes(termino) ||
+                equipo.numero_serie.toLowerCase().includes(termino)
+            );
+            renderizarTabla(resultados);
+        });
+
+        // Función para agregar un nuevo equipo
+        document.getElementById("agregar-equipo").addEventListener("click", function () {
+            alert("Funcionalidad para agregar equipo en desarrollo...");
+        });
+
+        // Función para manejar acciones (editar/eliminar)
+        document.addEventListener("click", function (e) {
+            if (e.target.classList.contains("editar")) {
+                alert("Funcionalidad para editar equipo en desarrollo...");
+            } else if (e.target.classList.contains("eliminar")) {
+                alert("Funcionalidad para eliminar equipo en desarrollo...");
+            }
+        });
+    </script>
+</body>
+</html>
