@@ -1,179 +1,106 @@
-// script.js - Lógica principal de Enigmatool
+// script.js - Lógica unificada para toda la aplicación
 
-// =============================================
-// Configuración inicial
-// =============================================
-const API_BASE = 'php/';
-const config = {
-    equipos: {
-        list: 'equipos.php',
-        create: 'equipos.php',
-        update: 'equipos.php',
-        delete: 'equipos.php'
-    },
-    receptores: {
-        list: 'receptores.php',
-        create: 'receptores.php'
-    },
-    auth: 'auth.php',
-    upload: 'upload.php'
-};
+// ======================== LOGIN ========================
+document.getElementById('login-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const usuario = document.getElementById('usuario').value;
+    const contrasena = document.getElementById('contrasena').value;
 
-// =============================================
-// Módulo de Autenticación
-// =============================================
-const Auth = {
-    init: () => {
-        const loginForm = document.getElementById('login-form');
-        if(loginForm) {
-            loginForm.addEventListener('submit', Auth.handleLogin);
-        }
-    },
-
-    handleLogin: async (e) => {
-        e.preventDefault();
-        const usuario = document.getElementById('usuario').value;
-        const contrasena = document.getElementById('contrasena').value;
-
-        try {
-            const response = await fetch(API_BASE + config.auth, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ usuario, contrasena })
-            });
-            
-            const data = await response.json();
-            
-            if(data.success) {
-                window.location.href = 'inventario.html';
-            } else {
-                UI.showError(data.message || 'Error de autenticación');
-            }
-        } catch (error) {
-            UI.showError('Error de conexión con el servidor');
-            console.error('Login error:', error);
-        }
-    }
-};
-
-// =============================================
-// Módulo de Inventario
-// =============================================
-const Inventario = {
-    init: () => {
-        // Cargar datos iniciales
-        Inventario.loadEquipos();
-        
-        // Configurar eventos
-        document.getElementById('busqueda').addEventListener('input', Inventario.handleSearch);
-        document.getElementById('agregar-equipo').addEventListener('click', UI.showEquipoForm);
-        
-        // Delegación de eventos para acciones
-        document.querySelector('#tabla-equipos tbody').addEventListener('click', (e) => {
-            if(e.target.classList.contains('editar')) {
-                Inventario.handleEdit(e);
-            } else if(e.target.classList.contains('eliminar')) {
-                Inventario.handleDelete(e);
-            }
+    try {
+        const response = await fetch('php/auth.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ usuario, contrasena })
         });
-    },
-
-    loadEquipos: async () => {
-        try {
-            const response = await fetch(API_BASE + config.equipos.list);
-            const equipos = await response.json();
-            UI.renderTable(equipos);
-        } catch (error) {
-            UI.showError('Error cargando inventario');
-            console.error('Load error:', error);
-        }
-    },
-
-    handleSearch: (e) => {
-        const termino = e.target.value.toLowerCase();
-        const rows = document.querySelectorAll('#tabla-equipos tbody tr');
         
-        rows.forEach(row => {
-            const text = row.textContent.toLowerCase();
-            row.style.display = text.includes(termino) ? '' : 'none';
-        });
-    },
-
-    handleEdit: (e) => {
-        const row = e.target.closest('tr');
-        const equipoId = row.dataset.id;
-        // Implementar lógica de edición...
-        console.log('Editar equipo ID:', equipoId);
-    },
-
-    handleDelete: async (e) => {
-        const row = e.target.closest('tr');
-        const equipoId = row.dataset.id;
+        const data = await response.json();
         
-        if(confirm('¿Estás seguro de eliminar este equipo?')) {
-            try {
-                const response = await fetch(`${API_BASE}${config.equipos.delete}?id=${equipoId}`, {
-                    method: 'DELETE'
-                });
-                
-                if(response.ok) {
-                    row.remove();
-                    UI.showSuccess('Equipo eliminado correctamente');
-                }
-            } catch (error) {
-                UI.showError('Error eliminando equipo');
-                console.error('Delete error:', error);
-            }
+        if(data.success) {
+            window.location.href = 'inventario.html';
+        } else {
+            mostrarError(data.message || 'Error de autenticación');
         }
+    } catch (error) {
+        mostrarError('Error de conexión');
     }
-};
+});
 
-// =============================================
-// Módulo de Interfaz de Usuario
-// =============================================
-const UI = {
-    showError: (message) => {
-        const errorDiv = document.getElementById('error-message');
-        errorDiv.textContent = message;
-        errorDiv.style.display = 'block';
-        setTimeout(() => errorDiv.style.display = 'none', 5000);
-    },
+// ======================== INVENTARIO ========================
+if (document.getElementById('tabla-equipos')) {
+    // Cargar equipos al iniciar
+    cargarEquipos();
+    
+    // Busqueda en tiempo real
+    document.getElementById('busqueda').addEventListener('input', buscarEquipos);
+    
+    // Subida de archivos
+    document.getElementById('form-archivos').addEventListener('submit', subirArchivos);
+}
 
-    showSuccess: (message) => {
-        alert(message); // Puedes reemplazar con un toast mejorado
-    },
+async function cargarEquipos() {
+    try {
+        const response = await fetch('php/equipos.php');
+        const equipos = await response.json();
+        renderizarTabla(equipos);
+    } catch (error) {
+        mostrarError('Error cargando inventario');
+    }
+}
 
-    renderTable: (equipos) => {
-        const tbody = document.querySelector('#tabla-equipos tbody');
-        tbody.innerHTML = '';
-        
-        equipos.forEach(equipo => {
-            const row = document.createElement('tr');
-            row.dataset.id = equipo.id;
-            row.innerHTML = `
+function renderizarTabla(equipos) {
+    const tbody = document.querySelector('#tabla-equipos tbody');
+    tbody.innerHTML = '';
+    
+    equipos.forEach(equipo => {
+        tbody.innerHTML += `
+            <tr data-id="${equipo.id}">
                 <td>${equipo.tipo}</td>
                 <td>${equipo.marca}</td>
                 <td>${equipo.modelo}</td>
                 <td>${equipo.numero_serie}</td>
-                <td class="acciones">
-                    <button class="btn editar">Editar</button>
-                    <button class="btn eliminar">Eliminar</button>
+                <td>
+                    <button class="editar">Editar</button>
+                    <button class="eliminar">Eliminar</button>
                 </td>
-            `;
-            tbody.appendChild(row);
+            </tr>
+        `;
+    });
+}
+
+// ======================== SUBIDA DE ARCHIVOS ========================
+async function subirArchivos(e) {
+    e.preventDefault();
+    
+    const formData = new FormData();
+    const archivos = document.getElementById('archivos').files;
+    
+    Array.from(archivos).forEach((archivo, i) => {
+        formData.append(`archivos[${i}]`, archivo);
+    });
+    
+    try {
+        const response = await fetch('php/upload.php', {
+            method: 'POST',
+            body: formData
         });
-    },
-
-    showEquipoForm: (equipo = null) => {
-        // Implementar formulario modal con campos según tipo de equipo
-        console.log('Mostrar formulario para:', equipo || 'nuevo equipo');
+        
+        const data = await response.json();
+        
+        if(data.success) {
+            alert('Archivos subidos correctamente');
+        } else {
+            mostrarError(data.message);
+        }
+    } catch (error) {
+        mostrarError('Error subiendo archivos');
     }
-};
+}
 
-// =============================================
-// Inicialización de la aplicación
-// =============================================
-document.addEventListener('DOMContentLoaded', () => {
-    if(document.getElementById('login-form')) Auth.init();
-    if(document.getElementById('tabla-equipos')) Inventario.init();
-});
+// Función auxiliar para mostrar errores
+function mostrarError(mensaje) {
+    const errorDiv = document.getElementById('error-message');
+    errorDiv.textContent = mensaje;
+    errorDiv.style.display = 'block';
+    setTimeout(() => errorDiv.style.display = 'none', 5000);
+}
