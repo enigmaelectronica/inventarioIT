@@ -1,0 +1,174 @@
+/* styles.css - Estilos generales para Enigmatool */
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Contenedor principal */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Estilos para el login */
+.login-container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    margin: 2rem auto;
+}
+
+.login-container h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+}
+
+/* Campos de formulario */
+input[type="text"],
+input[type="password"],
+input[type="search"],
+select {
+    width: 100%;
+    padding: 0.8rem;
+    margin: 0.5rem 0;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+input:focus,
+select:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+/* Botones */
+.btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: opacity 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-success {
+    background-color: #27ae60;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn-warning {
+    background-color: #f1c40f;
+    color: #2c3e50;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+/* Tabla de inventario */
+.inventario-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.inventario-table th,
+.inventario-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.inventario-table th {
+    background-color: #3498db;
+    color: white;
+}
+
+.inventario-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Acciones en tabla */
+.acciones {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Mensajes de error */
+.error-message {
+    color: #e74c3c;
+    padding: 0.5rem;
+    margin: 1rem 0;
+    background: #fadbd8;
+    border-radius: 4px;
+    display: none;
+}
+
+/* Header de la aplicación */
+.app-header {
+    background: #2c3e50;
+    color: white;
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
+
+.app-header h1 {
+    font-size: 1.5rem;
+}
+
+/* Barra de búsqueda */
+.search-bar {
+    display: flex;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+/* Tarjetas de equipo */
+.equipo-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .inventario-table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .search-bar {
+        flex-direction: column;
+    }
+}
