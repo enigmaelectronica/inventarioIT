@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Contraseña - Enigmatool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <h1>🔑 Recuperar Contraseña</h1>
+            <p class="subtitulo">Ingresa tu correo asociado</p>
+        </div>
+
+        <form id="form-recuperar" class="form-login">
+            <div class="form-group">
+                <label for="email">📧 Correo Electrónico:</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email"
+                    placeholder="usuario@empresa.com"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="btn btn-block btn-success">
+                Enviar Instrucciones
+            </button>
+        </form>
+
+        <div id="mensaje" class="mensaje"></div>
+        <div class="login-footer">
+            <a href="index.html" class="link">← Volver al Login</a>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
