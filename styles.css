@@ -1,36 +1,54 @@
 :root {
+    /* Colores principales */
     --color-primario: #2c3e50;
     --color-secundario: #3498db;
     --color-exito: #27ae60;
     --color-peligro: #e74c3c;
     --color-advertencia: #f1c40f;
     --color-fondo: #f8f9fa;
+    --color-texto: #333333;
+    
+    /* Sombras */
     --sombra-suave: 0 2px 8px rgba(0,0,0,0.1);
+    --sombra-modal: 0 0 20px rgba(0,0,0,0.2);
+    
+    /* Transiciones */
+    --transicion-rapida: all 0.3s ease;
 }
 
+/* Reset y estilos base */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
 body {
-    font-family: 'Segoe UI', system-ui, sans-serif;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
     line-height: 1.6;
-    background: var(--color-fondo);
-    color: var(--color-primario);
+    min-height: 100vh;
+}
+
+/* Contenedores principales */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .login-container {
     background: white;
     padding: 2rem;
-    border-radius: 10px;
+    border-radius: 15px;
     box-shadow: var(--sombra-suave);
     width: min(90%, 400px);
-    margin: 5rem auto;
+    margin: 5vh auto;
     animation: aparecer 0.4s ease;
 }
 
+/* Tablas */
 .inventario-table {
     width: 100%;
     border-collapse: collapse;
@@ -39,6 +57,65 @@ body {
     margin: 2rem 0;
 }
 
+.inventario-table th,
+.inventario-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.inventario-table th {
+    background-color: var(--color-primario);
+    color: white;
+}
+
+/* Formularios */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: var(--transicion-rapida);
+}
+
+.form-control:focus {
+    border-color: var(--color-secundario);
+    outline: none;
+}
+
+/* Botones */
+.btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: var(--transicion-rapida);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-success {
+    background-color: var(--color-exito);
+    color: white;
+}
+
+.btn-danger {
+    background-color: var(--color-peligro);
+    color: white;
+}
+
+.btn-block {
+    width: 100%;
+    justify-content: center;
+}
+
+/* Modal */
 .modal {
     display: none;
     position: fixed;
@@ -57,8 +134,49 @@ body {
     width: min(90%, 600px);
     border-radius: 10px;
     animation: aparecer 0.3s ease;
+    position: relative;
 }
 
+.cerrar-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--color-primario);
+    transition: var(--transicion-rapida);
+}
+
+/* Mensajes */
+.error-message {
+    background: #ffebee;
+    color: #c62828;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 6px;
+    display: none;
+}
+
+.mensaje {
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 6px;
+    display: none;
+}
+
+.mensaje.exito {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
+
+.mensaje.error {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+/* Animaciones */
 @keyframes aparecer {
     from {
         opacity: 0;
@@ -70,31 +188,20 @@ body {
     }
 }
 
-.btn {
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s;
+/* Responsive Design */
+@media (max-width: 768px) {
+    .inventario-table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .modal-contenido {
+        margin: 10vh auto;
+        padding: 1.5rem;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
 }
-
-.btn-success {
-    background: var(--color-exito);
-    color: white;
-}
-
-.btn-danger {
-    background: var(--color-peligro);
-    color: white;
-}
-
-.error-message {
-    color: var(--color-peligro);
-    padding: 1rem;
-    margin: 1rem 0;
-    background: #fee;
-    border: 1px solid var(--color-peligro);
-    border-radius: 6px;
-}
-
-/* Estilos restantes del modal y formulario... */
