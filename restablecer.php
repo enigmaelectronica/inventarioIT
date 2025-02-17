@@ -1,42 +1,129 @@
 <?php
-require_once 'conexion.php';
+session_start();
+require_once 'php/conexion.php';
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restablecer Contraseña - Enigmatool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <h1>🔄 Restablecer Contraseña</h1>
+            <p class="subtitulo">Crea una nueva contraseña segura</p>
+        </div>
 
-header('Content-Type: application/json');
+        <?php
+        // Verificar token válido
+        $token_valido = false;
+        if (isset($_GET['token'])) {
+            try {
+                $db = ConexionBD::obtenerInstancia();
+                $stmt = $db->prepare("SELECT id FROM usuarios 
+                                    WHERE token_recuperacion = ? 
+                                    AND expiracion_token > NOW()");
+                $stmt->execute([$_GET['token']]);
+                $token_valido = $stmt->rowCount() > 0;
+            } catch(PDOException $e) {
+                echo '<div class="mensaje error">Error validando token</div>';
+            }
+        }
+        
+        if ($token_valido) :
+        ?>
+        
+        <form id="form-restablecer" class="form-login">
+            <input type="hidden" id="token" value="<?= htmlspecialchars($_GET['token']) ?>">
+            
+            <div class="form-group">
+                <label for="nueva_contrasena">🔒 Nueva Contraseña:</label>
+                <input 
+                    type="password" 
+                    id="nueva_contrasena" 
+                    required
+                    minlength="8"
+                    placeholder="Mínimo 8 caracteres"
+                    class="form-control"
+                >
+            </div>
 
-try {
-    $data = json_decode(file_get_contents('php://input'), true);
-    $token = $data['token'];
-    $nuevaContrasena = $data['nueva_contrasena'];
+            <div class="form-group">
+                <label for="confirmar_contrasena">✅ Confirmar Contraseña:</label>
+                <input 
+                    type="password" 
+                    id="confirmar_contrasena" 
+                    required
+                    minlength="8"
+                    placeholder="Repite tu nueva contraseña"
+                    class="form-control"
+                >
+            </div>
 
-    // Validar token
-    $db = ConexionBD::obtenerInstancia();
-    $stmt = $db->prepare("SELECT * FROM usuarios WHERE token_recuperacion = ? AND expiracion_token > NOW()");
-    $stmt->execute([$token]);
-    
-    $usuario = $stmt->fetch();
-    if (!$usuario) {
-        throw new Exception("Token inválido o expirado");
-    }
+            <button type="submit" class="btn btn-block btn-success">
+                🚀 Actualizar Contraseña
+            </button>
+        </form>
 
-    // Validar contraseña
-    if (strlen($nuevaContrasena) < 8) {
-        throw new Exception("La contraseña debe tener al menos 8 caracteres");
-    }
+        <?php else : ?>
+        
+        <div class="mensaje error">
+            ⚠️ Enlace inválido o expirado. Solicita un nuevo enlace de recuperación.
+        </div>
+        <div class="login-footer">
+            <a href="recuperar-contrasena.html" class="link">Solicitar nuevo enlace</a>
+        </div>
 
-    // Actualizar contraseña
-    $hash = password_hash($nuevaContrasena, PASSWORD_DEFAULT);
-    $stmt = $db->prepare("UPDATE usuarios SET contrasena = ?, token_recuperacion = NULL, expiracion_token = NULL WHERE id = ?");
-    $stmt->execute([$hash, $usuario['id']]);
+        <?php endif; ?>
 
-    echo json_encode([
-        'success' => true,
-        'mensaje' => 'Contraseña actualizada exitosamente'
-    ]);
+        <div id="mensaje" class="mensaje"></div>
+    </div>
 
-} catch (Exception $e) {
-    http_response_code(400);
-    echo json_encode([
-        'success' => false,
-        'mensaje' => $e->getMessage()
-    ]);
-}
+    <script>
+    document.getElementById('form-restablecer').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const token = document.getElementById('token').value;
+        const nuevaContrasena = document.getElementById('nueva_contrasena').value;
+        const confirmarContrasena = document.getElementById('confirmar_contrasena').value;
+        const mensaje = document.getElementById('mensaje');
+
+        // Validar coincidencia
+        if (nuevaContrasena !== confirmarContrasena) {
+            mensaje.textContent = 'Las contraseñas no coinciden';
+            mensaje.className = 'mensaje error';
+            mensaje.style.display = 'block';
+            return;
+        }
+
+        try {
+            const response = await fetch('php/restablecer.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    token: token,
+                    nueva_contrasena: nuevaContrasena
+                })
+            });
+            
+            const data = await response.json();
+            
+            mensaje.textContent = data.mensaje;
+            mensaje.className = `mensaje ${data.success ? 'exito' : 'error'}`;
+            mensaje.style.display = 'block';
+
+            if (data.success) {
+                setTimeout(() => window.location.href = 'index.html', 2000);
+            }
+        } catch (error) {
+            mensaje.textContent = 'Error de conexión';
+            mensaje.className = 'mensaje error';
+            mensaje.style.display = 'block';
+        }
+    });
+    </script>
+</body>
+</html>
