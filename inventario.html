@@ -3,29 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enigmatool - Inventario</title>
+    <title>Enigmatool - Gestión de Inventario</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header class="app-header">
-        <h1>Control de Inventario</h1>
-        <button id="cerrar-sesion">Cerrar Sesión</button>
+        <h1>🔧 Enigmatool - Inventario IT</h1>
+        <button id="cerrar-sesion" class="btn btn-danger">🚪 Cerrar Sesión</button>
     </header>
 
     <div class="container">
-        <!-- Barra de herramientas -->
+        <!-- Barra de Herramientas -->
         <div class="toolbar">
-            <input type="text" id="busqueda" placeholder="Buscar por número de serie, modelo o receptor...">
-            <button id="agregar-equipo" class="btn btn-success">➕ Nuevo Equipo</button>
+            <input type="text" id="busqueda" placeholder="🔍 Buscar por número de serie, modelo o receptor..." class="search-input">
+            <button id="nuevo-equipo" class="btn btn-success">➕ Nuevo Equipo</button>
         </div>
 
-        <!-- Formulario de subida de archivos -->
-        <form id="form-archivos" class="upload-form">
-            <input type="file" id="archivos" multiple accept=".jpg,.jpeg,.png,.bmp,.pdf">
-            <button type="submit" class="btn btn-primary">📤 Subir Archivos</button>
-        </form>
-
-        <!-- Tabla de equipos -->
+        <!-- Tabla de Equipos -->
         <table class="inventario-table">
             <thead>
                 <tr>
@@ -37,66 +31,97 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- Datos se cargan dinámicamente -->
+            <tbody id="tabla-equipos">
+                <!-- Datos dinámicos desde JS -->
             </tbody>
         </table>
+    </div>
 
-        <!-- Mensajes de error -->
-        <div id="error-message" class="error-message"></div>
+    <!-- Modal para Equipos -->
+    <div id="modal-equipo" class="modal">
+        <div class="modal-contenido">
+            <span class="cerrar-modal">&times;</span>
+            <h2 id="modal-titulo">📦 Nuevo Equipo</h2>
+            
+            <form id="form-equipo" enctype="multipart/form-data">
+                <input type="hidden" id="equipo-id">
+                
+                <div class="form-group">
+                    <label>🏷️ Tipo de Equipo:</label>
+                    <select id="tipo-equipo" class="form-control" required>
+                        <option value="">Seleccionar...</option>
+                        <option value="computadora">💻 Computadora</option>
+                        <option value="celular">📱 Celular</option>
+                        <option value="impresora">🖨️ Impresora</option>
+                    </select>
+                </div>
+
+                <!-- Campos Comunes -->
+                <div class="form-group">
+                    <label>🏭 Marca:</label>
+                    <input type="text" id="marca" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>📐 Modelo:</label>
+                    <input type="text" id="modelo" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>🔢 Número de Serie:</label>
+                    <input type="text" id="numero-serie" class="form-control" required>
+                </div>
+
+                <!-- Campos Específicos -->
+                <div class="form-group computadora-only">
+                    <label>⚡ N° Servicio Express:</label>
+                    <input type="text" id="numero-express" class="form-control">
+                </div>
+
+                <div class="form-group celular-only">
+                    <label>📞 Número Teléfono:</label>
+                    <input type="tel" id="numero-telefono" class="form-control">
+                </div>
+
+                <div class="form-group celular-only">
+                    <label>🆔 IMEI:</label>
+                    <input type="text" id="imei" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>💲 Costo:</label>
+                    <input type="number" id="costo" class="form-control" step="0.01" required>
+                </div>
+
+                <!-- Receptor -->
+                <div class="form-group">
+                    <label>👤 Receptor:</label>
+                    <select id="receptor-id" class="form-control" required>
+                        <option value="">Cargando receptores...</option>
+                    </select>
+                </div>
+
+                <!-- Archivos -->
+                <div class="form-group">
+                    <label>📸 Fotos (Máx. 4):</label>
+                    <input type="file" id="fotos" class="form-control" accept="image/*" multiple>
+                    <small class="form-text">Formatos: JPG, PNG, BMP (1MB c/u)</small>
+                </div>
+
+                <div class="form-group">
+                    <label>📄 PDF de Aceptación:</label>
+                    <input type="file" id="pdf-aceptacion" class="form-control" accept=".pdf">
+                    <small class="form-text">Máx. 5MB</small>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success">💾 Guardar</button>
+                    <button type="button" class="btn btn-danger" onclick="document.getElementById('modal-equipo').style.display='none'">❌ Cancelar</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script src="script.js"></script>
 </body>
-    <!-- Modal para agregar/editar equipos -->
-<div id="modal-equipo" class="modal">
-    <div class="modal-contenido">
-        <span class="cerrar-modal">&times;</span>
-        <h2 id="modal-titulo">Nuevo Equipo</h2>
-        <form id="form-equipo" enctype="multipart/form-data">
-            <input type="hidden" id="equipo-id">
-            
-            <div class="form-group">
-                <label>Tipo de Equipo:</label>
-                <select id="tipo-equipo" required>
-                    <option value="computadora">Computadora</option>
-                    <option value="celular">Celular</option>
-                    <option value="impresora">Impresora</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Marca:</label>
-                <input type="text" id="marca" required>
-            </div>
-
-            <div class="form-group">
-                <label>Modelo:</label>
-                <input type="text" id="modelo" required>
-            </div>
-
-            <div class="form-group">
-                <label>Número de Serie:</label>
-                <input type="text" id="numero-serie" required>
-            </div>
-
-            <div class="form-group">
-                <label>Receptor:</label>
-                <select id="receptor-id"></select>
-            </div>
-
-            <div class="form-group">
-                <label>Fotos del Equipo (Máx. 4):</label>
-                <input type="file" id="fotos" accept="image/*" multiple>
-            </div>
-
-            <div class="form-group">
-                <label>PDF de Aceptación:</label>
-                <input type="file" id="pdf-aceptacion" accept=".pdf">
-            </div>
-
-            <button type="submit" class="btn btn-success">Guardar</button>
-        </form>
-    </div>
-</div>
 </html>
