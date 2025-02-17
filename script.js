@@ -1,106 +1,78 @@
-// script.js - Lógica unificada para toda la aplicación
+class Enigmatool {
+    static init() {
+        this.configurarEventos();
+        if (document.getElementById('tabla-equipos')) this.cargarEquipos();
+    }
 
-// ======================== LOGIN ========================
-document.getElementById('login-form')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const usuario = document.getElementById('usuario').value;
-    const contrasena = document.getElementById('contrasena').value;
-
-    try {
-        const response = await fetch('php/auth.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ usuario, contrasena })
+    static configurarEventos() {
+        // Login
+        document.getElementById('login-form')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const usuario = document.getElementById('usuario').value;
+            const contrasena = document.getElementById('contrasena').value;
+            await this.autenticar(usuario, contrasena);
         });
-        
-        const data = await response.json();
-        
-        if(data.success) {
-            window.location.href = 'inventario.html';
-        } else {
-            mostrarError(data.message || 'Error de autenticación');
+
+        // Búsqueda
+        document.getElementById('busqueda')?.addEventListener('input', (e) => {
+            this.filtrarEquipos(e.target.value.toLowerCase());
+        });
+
+        // Modal
+        document.getElementById('nuevo-equipo')?.addEventListener('click', () => this.mostrarModal());
+        document.querySelector('.cerrar-modal')?.addEventListener('click', () => {
+            document.getElementById('modal-equipo').style.display = 'none';
+        });
+    }
+
+    static async autenticar(usuario, contrasena) {
+        try {
+            const response = await fetch('php/auth.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario, contrasena })
+            });
+            
+            const data = await response.json();
+            if (data.success) window.location.href = 'inventario.html';
+            else this.mostrarError(data.message || 'Error de autenticación');
+        } catch (error) {
+            this.mostrarError('Error de conexión');
         }
-    } catch (error) {
-        mostrarError('Error de conexión');
     }
-});
 
-// ======================== INVENTARIO ========================
-if (document.getElementById('tabla-equipos')) {
-    // Cargar equipos al iniciar
-    cargarEquipos();
-    
-    // Busqueda en tiempo real
-    document.getElementById('busqueda').addEventListener('input', buscarEquipos);
-    
-    // Subida de archivos
-    document.getElementById('form-archivos').addEventListener('submit', subirArchivos);
-}
-
-async function cargarEquipos() {
-    try {
-        const response = await fetch('php/equipos.php');
-        const equipos = await response.json();
-        renderizarTabla(equipos);
-    } catch (error) {
-        mostrarError('Error cargando inventario');
+    static async cargarEquipos() {
+        try {
+            const response = await fetch('php/equipos.php');
+            this.equipos = await response.json();
+            this.renderizarTabla();
+        } catch (error) {
+            this.mostrarError('Error cargando equipos');
+        }
     }
-}
 
-function renderizarTabla(equipos) {
-    const tbody = document.querySelector('#tabla-equipos tbody');
-    tbody.innerHTML = '';
-    
-    equipos.forEach(equipo => {
-        tbody.innerHTML += `
+    static renderizarTabla() {
+        const tbody = document.getElementById('tabla-equipos');
+        tbody.innerHTML = this.equipos.map(equipo => `
             <tr data-id="${equipo.id}">
                 <td>${equipo.tipo}</td>
                 <td>${equipo.marca}</td>
                 <td>${equipo.modelo}</td>
                 <td>${equipo.numero_serie}</td>
                 <td>
-                    <button class="editar">Editar</button>
-                    <button class="eliminar">Eliminar</button>
+                    <button class="btn editar">Editar</button>
+                    <button class="btn eliminar">Eliminar</button>
                 </td>
             </tr>
-        `;
-    });
-}
+        `).join('');
+    }
 
-// ======================== SUBIDA DE ARCHIVOS ========================
-async function subirArchivos(e) {
-    e.preventDefault();
-    
-    const formData = new FormData();
-    const archivos = document.getElementById('archivos').files;
-    
-    Array.from(archivos).forEach((archivo, i) => {
-        formData.append(`archivos[${i}]`, archivo);
-    });
-    
-    try {
-        const response = await fetch('php/upload.php', {
-            method: 'POST',
-            body: formData
-        });
-        
-        const data = await response.json();
-        
-        if(data.success) {
-            alert('Archivos subidos correctamente');
-        } else {
-            mostrarError(data.message);
-        }
-    } catch (error) {
-        mostrarError('Error subiendo archivos');
+    static mostrarError(mensaje) {
+        const errorDiv = document.getElementById('error-message');
+        errorDiv.textContent = mensaje;
+        errorDiv.style.display = 'block';
+        setTimeout(() => errorDiv.style.display = 'none', 5000);
     }
 }
 
-// Función auxiliar para mostrar errores
-function mostrarError(mensaje) {
-    const errorDiv = document.getElementById('error-message');
-    errorDiv.textContent = mensaje;
-    errorDiv.style.display = 'block';
-    setTimeout(() => errorDiv.style.display = 'none', 5000);
-}
+document.addEventListener('DOMContentLoaded', () => Enigmatool.init());
